@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp API 2025</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            color: #fff;
+            background: linear-gradient(135deg, #ff9900, #000000);
+        }
+
+        .jumbotron,
+        .bot-box {
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .jumbotron {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .jumbotron img {
+            max-width: 100%;
+            border-radius: 10px;
+        }
+
+        .content-container {
+            flex: 1;
+        }
+
+        .qr-container {
+            flex: 1;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .logo-container img {
+            max-width: 150px;
+        }
+
+        h3 {
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            text-align: left;
+            margin: 20px auto;
+            padding: 0;
+            list-style: none;
+        }
+
+        ul li {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            position: relative;
+            padding-left: 20px;
+        }
+
+        ul li::before {
+            content: "✔";
+            color: #ff9900;
+            font-size: 1rem;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+        .btn-support,
+        .btn-clear {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #fff;
+            background-color: #ff6600;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-support:hover,
+        .btn-clear:hover {
+            background-color: #cc5200;
+        }
+
+        .bot-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.9rem;
+            color: #fff;
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .status-indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin: 15px 0;
+            animation: blink-red 1s infinite;
+        }
+
+        @keyframes blink-green {
+            0% {
+                background-color: green;
+            }
+            50% {
+                background-color: limegreen;
+            }
+            100% {
+                background-color: green;
+            }
+        }
+
+        @keyframes blink-red {
+            0% {
+                background-color: red;
+            }
+            50% {
+                background-color: darkred;
+            }
+            100% {
+                background-color: red;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="d-flex align-items-center justify-content-center h-100">
+        <div class="container">
+            <!-- Caixa principal -->
+            <div class="jumbotron">
+                <div class="content-container">
+                    <div class="logo-container">
+                        <img src="image/logoz.png" alt="Logotipo">
+                    </div>
+                    <h3>Conecte-se à API do WhatsApp</h3>
+                    <ul>
+                        <li>Abra o WhatsApp no seu celular.</li>
+                        <li>Vá em <strong>Mais opções</strong> ou <strong>Ajustes</strong> e clique em <strong>WhatsApp Web</strong>.</li>
+                        <li>Escaneie o código QR exibido com seu celular.</li>
+                    </ul>
+                    <a href="https://suporte.exemplo.com" class="btn-support">Ir para Suporte</a>
+                </div>
+                <!-- QR Code -->
+                <div class="qr-container">
+                    <img src="image/qrcode.png" alt="QR Code">
+                </div>
+            </div>
+
+            <!-- Caixa do WhatsApp Bot -->
+            <div class="bot-box jumbotron">
+                <h3>Status do Bot</h3>
+                <div class="status-indicator" id="statusIndicator"></div>
+                <button class="btn-clear">Limpar Sessão</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const statusIndicator = document.getElementById('statusIndicator');
+        const clearButton = document.querySelector('.btn-clear');
+
+        async function updateStatus() {
+            const res = await fetch('/status');
+            const data = await res.json();
+
+            if (data.status === 'connected') {
+                statusIndicator.style.animation = 'blink-green 1s infinite'; // Piscar em verde
+            } else {
+                statusIndicator.style.animation = 'blink-red 1s infinite'; // Piscar em vermelho
+            }
+        }
+
+        clearButton.addEventListener('click', async () => {
+            await fetch('/logout', { method: 'POST' });
+            updateStatus();
+        });
+
+        updateStatus();
+        setInterval(updateStatus, 3000);
+    </script>
+
+</body>
+
+</html>
